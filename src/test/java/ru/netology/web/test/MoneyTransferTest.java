@@ -1,5 +1,6 @@
 package ru.netology.web.test;
 
+import lombok.val;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -29,39 +30,56 @@ class MoneyTransferTest {
 
     @Test
     void shouldTransferMoneyBetweenOwnCards() {
-        int cardInitialBalance = dashboardPage.getCardBalance(0);
-        int secondCardInitialBalance = dashboardPage.getCardBalance(1);
+        val cardInitialBalance = dashboardPage.getCardBalance(0);
+        val secondCardInitialBalance = dashboardPage.getCardBalance(1);
 
         int amount = 200;
         var transferPage = dashboardPage.transferTo(0);
         var successDashboardPage = transferPage.transferFrom(amount, DataHelper.getSecondCardNumber().toString());
 
+        // проверка, что на одной карте баланс увеличился, а на другой - уменьшился
         assertEquals(cardInitialBalance + amount, successDashboardPage.getCardBalance(0));
         assertEquals(secondCardInitialBalance - amount, successDashboardPage.getCardBalance(1));
     }
 
     @Test
     void shouldNotTransferFromTheSameCard() {
-        int cardInitialBalance = dashboardPage.getCardBalance(0);
-        int secondCardInitialBalance = dashboardPage.getCardBalance(1);
+        val cardInitialBalance = dashboardPage.getCardBalance(0);
+        val secondCardInitialBalance = dashboardPage.getCardBalance(1);
 
         int amount = 200;
         var transferPage = dashboardPage.transferTo(0);
         var successDashboardPage = transferPage.transferFrom(amount, DataHelper.getFirstCardNumber().toString());
 
+        // проверка, что баланс обеих карт не изменился
         assertEquals(cardInitialBalance, successDashboardPage.getCardBalance(0));
         assertEquals(secondCardInitialBalance, successDashboardPage.getCardBalance(1));
     }
 
     @Test
     void shouldNotTransferWhenInsufficientBalance() {
-        int secondCardInitialBalance = dashboardPage.getCardBalance(1);
+        val secondCardInitialBalance = dashboardPage.getCardBalance(1);
 
-        int amount = secondCardInitialBalance + 500;
+        double amount = secondCardInitialBalance + 500;
         var transferPage = dashboardPage.transferTo(0);
         transferPage.transferFrom(amount, DataHelper.getSecondCardNumber().toString());
 
+        // должно быть видно уведомление об ошибке
         transferPage.getError().shouldBe(visible);
+    }
+
+    @Test
+    void shouldTransferKopecks() {
+        val cardInitialBalance = dashboardPage.getCardBalance(0);
+        val secondCardInitialBalance = dashboardPage.getCardBalance(1);
+
+        double amount = 200.99;
+        var transferPage = dashboardPage.transferTo(0);
+        var successDashboardPage = transferPage.transferFrom(amount, DataHelper.getSecondCardNumber().toString());
+
+        // проверка, что на одной карте баланс увеличился, а на другой - уменьшился
+        assertEquals(cardInitialBalance + amount, successDashboardPage.getCardBalance(0));
+        assertEquals(secondCardInitialBalance - amount, successDashboardPage.getCardBalance(1));
     }
 }
 

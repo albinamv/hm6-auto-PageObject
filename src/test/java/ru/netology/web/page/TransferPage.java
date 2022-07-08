@@ -1,6 +1,7 @@
 package ru.netology.web.page;
 
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.Keys;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.$;
@@ -22,9 +23,26 @@ public class TransferPage {
     }
 
     public DashboardPage transferFrom(int amount, String cardNumber) {
+        clearTheForm();
         amountField.setValue(String.valueOf(amount));
         fromField.setValue(cardNumber);
         transferButton.click();
         return new DashboardPage();
+    }
+
+    public DashboardPage transferFrom(double amount, String cardNumber) {
+        clearTheForm();
+        amountField.setValue(String.valueOf(amount));
+        fromField.setValue(cardNumber);
+        transferButton.click();
+        return new DashboardPage();
+    }
+
+    private void clearTheForm() {
+        amountField.sendKeys(Keys.CONTROL + "A");
+        amountField.sendKeys(Keys.BACK_SPACE);
+
+        fromField.sendKeys(Keys.CONTROL + "A");
+        fromField.sendKeys(Keys.BACK_SPACE);
     }
 }

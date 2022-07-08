@@ -18,16 +18,16 @@ public class DashboardPage {
         heading.shouldBe(visible);
     }
 
-    public int getCardBalance(int cardIndex) {
+    public double getCardBalance(int cardIndex) {
         val text = cards.get(cardIndex).text();
         return extractBalance(text);
     }
 
-    private int extractBalance(String text) {
+    private double extractBalance(String text) {
         val start = text.indexOf(balanceStart);
         val finish = text.indexOf(balanceFinish);
         val value = text.substring(start + balanceStart.length(), finish);
-        return Integer.parseInt(value);
+        return Double.parseDouble(value);
     }
 
     public TransferPage transferTo(int cardIndex) {
