@@ -65,7 +65,7 @@ class MoneyTransferTest {
         transferPage.transferFrom(amount, DataHelper.getSecondCardNumber().toString());
 
         // должно быть видно уведомление об ошибке
-        transferPage.getError().shouldBe(visible);
+        transferPage.checkError();
     }
 
     @Test

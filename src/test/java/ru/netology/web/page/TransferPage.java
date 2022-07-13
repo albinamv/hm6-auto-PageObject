@@ -14,8 +14,8 @@ public class TransferPage {
     private SelenideElement transferButton = $("[data-test-id=action-transfer]");
     private SelenideElement error = $("[data-test-id = error-notification]");
 
-    public SelenideElement getError() {
-        return error;
+    public void checkError() {
+        error.shouldBe(visible);
     }
 
     public TransferPage(String cardNumber) {
